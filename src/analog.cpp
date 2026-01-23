@@ -21,7 +21,7 @@ void init_AnalogImputs_static_vals(void){
     //adc_range_driver[1] = INTERNAL1V1;
     //adc_range_driver[2] = INTERNAL2V56;
 
-    adc_range_volts[0] =   4690; //5000;
+    adc_range_volts[0] =   4610; //5000;
     adc_range_volts[1] =   1121; //1100;
     adc_range_volts[2] =   2513; //2560;
 
