@@ -1,14 +1,14 @@
 import time
 import serial.tools.list_ports
 import sys
-sys.path.append('/home/ltp-lab/Desktop/magnet/krastioMag-main/pythonTools')
-import krastioMag
+sys.path.append('/home/ltp-lab/Desktop/magnet/DipoleMagnet-main/pythonTools')
+import DipoleMagnet
 
 portName =''
 for port in serial.tools.list_ports.comports():
     print(port.device)
     portName = port.device
-ard = krastioMag.krastioMag(port = portName)
+ard = DipoleMagnet.DipoleMagnet(port = portName)
 
 while(True):
     time.sleep(1)

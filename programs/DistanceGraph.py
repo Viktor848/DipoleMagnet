@@ -6,8 +6,8 @@ import serial.tools.list_ports
 import csv
 import datetime
 import sys
-sys.path.append('/home/ltp-lab/Desktop/magnet/krastioMag-main/pythonTools')
-import krastioMag  
+sys.path.append('/home/ltp-lab/Desktop/magnet/DipoleMagnet-main/pythonTools')
+import DipoleMagnet  
 
 portName =''
 for port in serial.tools.list_ports.comports():
@@ -63,7 +63,7 @@ fig = plt.figure()                                      # Create Matplotlib plot
 
 ax = fig.add_subplot(111)                               # Add subplot to main fig window
 
-ard = krastioMag.krastioMag(port = portName)
+ard = DipoleMagnet.DipoleMagnet(port = portName)
 time.sleep(2)                                           # Time delay for Arduino Serial initialization 
 
                                                         # Matplotlib Animation Fuction that takes takes care of real time plot.

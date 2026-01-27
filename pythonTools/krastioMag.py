@@ -8,10 +8,9 @@
 #     - Compatible with old functions, but modernized
 # V3.1 – Added def install_arduino_commands(self)
 #=================================================
-# Serves Arduino running krastioMag firmware
+# Serves Arduino running DipoleMagnet firmware
 #--------------------------------------------
 # hello
-# Krastio Magnet
 # megaatmega2560
 
 from tools import serial_ports_list, print_my_ip, search_by_manufacturer
@@ -20,14 +19,14 @@ from pykiba import PykiDev
 import time
 
 
-class krastioMag(PykiDev):
-    """Class for interacting with Arduino running KrastioMag firmware.
+class DipoleMagnet(PykiDev):
+    """Class for interacting with Arduino running DipoleMagnet firmware.
 
     Extends PykiDev and automatically installs Arduino commands using the 'help' command.
     Also provides calibrated analog readings via polynomial correction.
     """
     def __init__(self, **kargs):
-        """Constructor for krastioMag.
+        """Constructor for DipoleMagnet.
 
         Parameters
         ----------
@@ -221,7 +220,7 @@ if __name__ == '__main__':
     if not serving:
         lstedPorts = serial_ports_list()
         prt = search_by_manufacturer(lstedPorts, mname)
-        ard = krastioMag(port='/dev/ttyACM0', baudrate=baudrate)
+        ard = DipoleMagnet(port='/dev/ttyACM0', baudrate=baudrate)
         print(ard)
     else:
         import zerorpc
@@ -232,6 +231,6 @@ if __name__ == '__main__':
         print("To IP address")
         print_my_ip()
         print(":4242")
-        s = zerorpc.Server(krastioMag(port=prt, baudrate=baudrate))
+        s = zerorpc.Server(DipoleMagnet(port=prt, baudrate=baudrate))
         s.bind("tcp://0.0.0.0:4242")
         s.run()
