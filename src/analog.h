@@ -2,7 +2,7 @@
 #define __ANALOG__H
 #include <Arduino.h>
 #include <ctype.h>
-#define BUFFER_MAX 16    // колко стойности да се усредняват (едно и също за всеки канал)
+#define BUFFER_MAX 64    // колко стойности да се усредняват (едно и също за всеки канал)
 #define EE_VAR_ADDRESS 0 // адрес в ее-прома където се пишат и четат тойностите на реф.волтажа  
 
 void init_AnalogImputs_static_vals(void); // инициализира стойностите на референсите (adc_range_volts[]) 

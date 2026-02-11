@@ -23,7 +23,7 @@ void init_AnalogImputs_static_vals(void){
 
     adc_range_volts[0] =   4610; //5000;
     adc_range_volts[1] =   1121; //1100;
-    adc_range_volts[2] =   2513; //2560;
+    adc_range_volts[2] =   2560; //2513; //2560;
 
 }
 
