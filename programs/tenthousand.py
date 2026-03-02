@@ -4,6 +4,7 @@ sys.path.append('/home/ltp-lab/DipoleMagnet/pythonTools')
 import DipoleMagnet
 import time
 import pandas as pd
+from IPython.display import display
 
 portName =''
 for port in serial.tools.list_ports.comports():
@@ -16,9 +17,9 @@ voltage1 = ard.uv(3)/1000.0
 voltage2 = ard.uv(2)/1000.0
 rref1 = (1000*voltage1)/(3.28-voltage1)
 table = pd.DataFrame(columns=['Time', 'Temperature'])
-start = time.time()
+start = int(time.time())
+index = 0
 while(True):
-    
     sum1 = 0
     sum2 = 0
     counter = 0
@@ -33,16 +34,18 @@ while(True):
     avg2 = round((sum2/counter), 6)
     resistance1 = (1000*avg1)/(3.28-avg1)
     resistance2 = (1000*avg2)/(3.28-avg2)
-    end = time.time()
-    if(end-start>=10000.0):
+    end = int(time.time())
+    if(end-start>=100.0):
         break
     amTemp = ard.cels()
     temp = round(amTemp + (resistance1 - rref1) / (rref1 * 0.00393), 2)
     print(temp , " degrees Celsius")
     print(amTemp)
-    table.append([end, temp], ignore_index=True)
+    print(end-start)
+    table.loc[index] = ([end-start, temp])
+    index+=1
 
 table.to_csv("Measurements.csv", index=False) 
-
+display(table)
 
 
