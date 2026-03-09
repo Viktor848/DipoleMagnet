@@ -1,6 +1,7 @@
 import serial
 import sys
-sys.path.append('/home/ltp-lab/DipoleMagnet/pythonTools')
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pythonTools'))
 import DipoleMagnet
 import time
 import pandas as pd

@@ -1,7 +1,8 @@
 import time
 import serial.tools.list_ports
 import sys
-sys.path.append('/home/ltp-lab/Desktop/magnet/DipoleMagnet-main/pythonTools')
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pythonTools'))
 import DipoleMagnet
 
 portName =''
