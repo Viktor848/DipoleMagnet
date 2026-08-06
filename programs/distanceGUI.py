@@ -16,8 +16,13 @@ import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext, filedialog
 import serial.tools.list_ports
 
-# Ensure pythonTools parent directory is importable (DipoleMagnet.py lives in ..)
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Ensure the project and pythonTools directories are importable.
+# The module lives in pythonTools/, not at the workspace root.
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+python_tools_dir = os.path.join(project_root, 'pythonTools')
+for path in (project_root, python_tools_dir):
+    if os.path.isdir(path) and path not in sys.path:
+        sys.path.append(path)
 try:
     import DipoleMagnet
 except Exception as exc:
@@ -87,6 +92,10 @@ class DistanceGUI:
         ttk.Label(read_frame, text='Gap Diff:').grid(row=6, column=0, sticky='w', padx=6, pady=2)
         self.gapdiff_var = tk.StringVar(value='—')
         ttk.Label(read_frame, textvariable=self.gapdiff_var).grid(row=6, column=1, sticky='w')
+
+        ttk.Label(read_frame, text='Gap Between Polls:').grid(row=7, column=0, sticky='w', padx=6, pady=2)
+        self.gapbetween_var = tk.StringVar(value='—')
+        ttk.Label(read_frame, textvariable=self.gapbetween_var).grid(row=7, column=1, sticky='w')
 
         # Controls
         ctrl_frame = ttk.Frame(main)
@@ -252,33 +261,38 @@ class DistanceGUI:
                 # calculations (same as original)
                 gap1 = dl * 0.64 if dl is not None else None
                 gap2 = dr * 0.48 if dr is not None else None
-                leftGap = 51.5 - (dl - 32) if dl is not None else None
-                rightGap = 51.5 - (dr - 24) if dr is not None else None
+                leftGap = 52.5 - (dl - 32) if dl is not None else None
+                rightGap = 52.5 - (dr - 24) if dr is not None else None
+                leftPoll = 52.5 - leftGap if leftGap is not None else None
+                rightPoll = 52.5 - rightGap if rightGap is not None else None
                 gapDiff = abs(leftGap - rightGap) if (leftGap is not None and rightGap is not None) else None
+                gapBetweenPolls = 105 - (leftPoll + rightPoll) if (leftPoll is not None and rightPoll is not None) else None
 
                 # schedule UI update on main thread
-                self.root.after(0, self._update_ui, dl, dr, gap1, gap2, leftGap, rightGap, gapDiff)
+                self.root.after(0, self._update_ui, dl, dr, leftPoll, rightPoll, leftGap, rightGap, gapDiff, gapBetweenPolls)
             except Exception as e:
                 self.log('Read error: {}'.format(e))
             # follow original sleep cadence
             time.sleep(1)
 
-    def _update_ui(self, dl, dr, gap1, gap2, leftGap, rightGap, gapDiff):
+    def _update_ui(self, dl, dr, leftPoll, rightPoll, leftGap, rightGap, gapDiff, gapBetweenPolls):
         self.left_var.set(str(dl) if dl is not None else 'err')
         self.right_var.set(str(dr) if dr is not None else 'err')
-        self.gap1_var.set('{:.2f}'.format(gap1) if gap1 is not None else '—')
-        self.gap2_var.set('{:.2f}'.format(gap2) if gap2 is not None else '—')
+        self.gap1_var.set('{:.2f}'.format(leftPoll) if leftPoll is not None else '—')
+        self.gap2_var.set('{:.2f}'.format(rightPoll) if rightPoll is not None else '—')
         self.leftgap_var.set('{:.2f}'.format(leftGap) if leftGap is not None else '—')
         self.rightgap_var.set('{:.2f}'.format(rightGap) if rightGap is not None else '—')
         self.gapdiff_var.set('{:.2f}'.format(gapDiff) if gapDiff is not None else '—')
+        self.gapbetween_var.set('{:.2f}'.format(gapBetweenPolls) if gapBetweenPolls is not None else '—')
         # also log the quick summary
-        self.log('LD:{} RD:{} LP:{} RP:{} LG:{} RG:{} GD:{}'.format(
+        self.log('LD:{} RD:{} LP:{} RP:{} LG:{} RG:{} GD:{} GBP:{}'.format(
             dl, dr,
-            '{:.2f}'.format(gap1) if gap1 is not None else '—',
-            '{:.2f}'.format(gap2) if gap2 is not None else '—',
+            '{:.2f}'.format(leftPoll) if leftPoll is not None else '—',
+            '{:.2f}'.format(rightPoll) if rightPoll is not None else '—',
             '{:.2f}'.format(leftGap) if leftGap is not None else '—',
             '{:.2f}'.format(rightGap) if rightGap is not None else '—',
-            '{:.2f}'.format(gapDiff) if gapDiff is not None else '—'))
+            '{:.2f}'.format(gapDiff) if gapDiff is not None else '—',
+            '{:.2f}'.format(gapBetweenPolls) if gapBetweenPolls is not None else '—'))
 
     def log(self, msg):
         ts = time.strftime('%H:%M:%S')
